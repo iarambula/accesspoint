@@ -2,7 +2,6 @@ import {
   Container,
   Card,
   Text,
-  Code,
   Pill,
   Group,
   Title,
