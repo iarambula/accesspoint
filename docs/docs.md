@@ -5,33 +5,33 @@
 Here's the core model for portraying deals in the database and all the relevant pieces:
 
 - **Deal:** (e.g. Leveraged Buyout)
-- **Entity:** An organization invovled in a deal (e.g. Investor, Advisor, Bank, Company)
-- **Person:** An individual who may work at an entity and participate in deals
-- **PersonEntityRole:** Relationship of person to entity
-- **Participation:** An entity's involvment in a specific deal
+- **Organization:** An organization invovled in a deal (e.g. Investor, Advisor, Bank, Company)
+- **Person:** An individual who may work at an organization and participate in deals
+- **PersonOrganizationRole:** Relationship of person to organization
+- **Participation:** An oranizations's involvment in a specific deal
 - **PersonParticipationRole:** The role a person plays within a deal context
 - **CompanyProfile:** Can contain details of a company from third party data providers
-- **ActionabilityScopre:** A contextual score (user-specific) that indicates how likely a person or entity is to engage with a deal — based on relationship intelligence and deal fit.
+- **ActionabilityScopre:** A contextual score (user-specific) that indicates how likely a person or organization is to engage with a deal — based on relationship intelligence and deal fit.
 
 ```mermaid
 erDiagram
     DEAL ||--o{ PARTICIPATION : has
-    ENTITY ||--o{ PARTICIPATION : involved_in
+    ORGANIZATION ||--o{ PARTICIPATION : involved_in
     PARTICIPATION }o--|| PERSON_PARTICIPATION_ROLE : involves
     PERSON_PARTICIPATION_ROLE }o--|| PERSON : played_by
 
     DEAL ||--|| ACTIONABILITY_SCORE : scores
-    PERSON ||--o{ PERSON_ENTITY_ROLE : connected_to
-    ENTITY ||--o{ PERSON_ENTITY_ROLE : connected_to
+    PERSON ||--o{ PERSON_ORGANIZATION_ROLE : connected_to
+    ORGANIZATION ||--o{ PERSON_ORGANIZATION_ROLE : connected_to
 
-    ENTITY ||--|| COMPANY_PROFILE : has
+    ORGANIZATION ||--|| COMPANY_PROFILE : has
 
     DEAL {
         string id
         string name
     }
 
-    ENTITY {
+    ORGANIZATION {
         string id
         string name
         string type
@@ -68,7 +68,7 @@ erDiagram
         float score
     }
 
-    PERSON_ENTITY_ROLE {
+    PERSON_ORGANIZATION_ROLE {
         string id
         string strength
         date last_contact
@@ -151,9 +151,9 @@ Python is a natural fit for ML workflows and prototyping. Rust becomes compellin
 
 ### Scalability considerations
 
-1. **Evolving Person–Entity Relationships**
-   A person’s relationship to an entity can change over time — they may switch jobs, change titles, or hold multiple roles. To keep the schema normalized and historically accurate, we separate:
-    - Person–Entity roles (long-term employment)
+1. **Evolving Person–Organization Relationships**
+   A person’s relationship to an organization can change over time — they may switch jobs, change titles, or hold multiple roles. To keep the schema normalized and historically accurate, we separate:
+    - Person–Organization roles (long-term employment)
     - Person–Deal roles (short-term deal participation)
 
 2. **Data Enrichment at Scale**
@@ -190,8 +190,8 @@ Returns full details of a deal including participants, roles, and people.
   "name": "Leveraged Buyout of ABC Corp",
   "participants": [
     {
-      "entity": {
-        "id": "ent_1",
+      "organization": {
+        "id": "org_1",
         "type": "Private Equity Firm",
         "name": "Blackstone"
       },
@@ -205,8 +205,8 @@ Returns full details of a deal including participants, roles, and people.
       ]
     },
     {
-      "entity": {
-        "id": "ent_2",
+      "organization": {
+        "id": "org_2",
         "type": "Corporate Seller",
         "name": "XYZ Holdings"
       },
@@ -220,8 +220,8 @@ Returns full details of a deal including participants, roles, and people.
       ]
     },
     {
-      "entity": {
-        "id": "ent_3",
+      "organization": {
+        "id": "org_3",
         "type": "Investment Bank",
         "name": "Goldman Sachs"
       },
@@ -235,8 +235,8 @@ Returns full details of a deal including participants, roles, and people.
       ]
     },
     {
-      "entity": {
-        "id": "ent_4",
+      "organization": {
+        "id": "org_4",
         "type": "Law Firm",
         "name": "Skadden, Arps, Slate, Meagher & Flom LLP"
       },
@@ -250,8 +250,8 @@ Returns full details of a deal including participants, roles, and people.
       ]
     },
     {
-      "entity": {
-        "id": "ent_5",
+      "organization": {
+        "id": "org_5",
         "type": "Target Company",
         "name": "ABC Corp",
         "profile": {
