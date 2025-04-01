@@ -1,17 +1,17 @@
-# System Design
+# AccessPoint Documentation
 
 ## ER Diagram
 
 Here's the core model for portraying deals in the database and all the relevant pieces:
 
-- **Deal:** (e.g. Leveraged Buyout)
-- **Organization:** An organization invovled in a deal (e.g. Investor, Advisor, Bank, Company)
-- **Person:** An individual who may work at an organization and participate in deals
-- **PersonOrganizationRole:** Relationship of person to organization
-- **Participation:** An oranizations's involvment in a specific deal
-- **PersonParticipationRole:** The role a person plays within a deal context
-- **CompanyProfile:** Can contain details of a company from third party data providers
-- **ActionabilityScopre:** A contextual score (user-specific) that indicates how likely a person or organization is to engage with a deal — based on relationship intelligence and deal fit.
+- **Deal**: Represents a transaction (e.g., Leveraged Buyout)
+- **Organization**: Any firm involved in a deal (e.g., investor, advisor, bank, company)
+- **Person**: An individual who may be affiliated with an organization and/or participate in deals
+- **PersonOrganizationRole**: A person’s ongoing relationship to an organization (e.g., employment, advisory)
+- **Participation**: An organization’s involvement in a specific deal
+- **PersonParticipationRole**: A person’s role within a deal context (e.g., lead negotiator, legal counsel)
+- **CompanyProfile**: Firmographic and enrichment data for organizations (typically sourced from third-party APIs)
+- **ActionabilityScore**: A contextual, user-specific score estimating how likely a person or organization is to engage in a deal
 
 ```mermaid
 erDiagram
@@ -296,3 +296,61 @@ Create a new deal with entities, people, and roles.
 `GET /recommendations`
 
 Returns a ranked list of investors or advisors for a future deal
+
+## Mockup
+
+![Newsfeed Item](newsfeed-item.png)
+
+## Product Notes
+
+This mockup demonstrates a potential future direction for the platform’s newsfeed, powered by a contextual intelligence layer referred to here as AccessPoint Intelligence. This component provides users with a deeper understanding of the activity in their network and ecosystem by connecting real-time news with historical deal and relationship data.
+
+### Core Value
+
+AccessPoint Intelligence helps users:
+
+- **Understand context:** Reveal who was involved in similar deals, or highlight relationships tied to people or firms mentioned in the news
+- **Identify patterns:** Surface themes and recurring players across similar transactions
+- **Act earlier:** Flag emerging deals and warm paths to engagement
+
+### Implementation Philosophy
+
+This is a vision-oriented feature, not something intended for immediate delivery. The goal of the mockup is to illustrate what this type of context-aware feed could enable. Real implementation would require:
+
+- Structuring historical deal data for semantic comparison
+- Mapping entities in unstructured text to known profiles
+- Calibrating relevance models over time based on feedback and interaction data
+
+### UX Scalability
+
+To keep the experience intuitive and extensible, the feed uses tag-based categorization to differentiate event types. These tags ('Deal Update', 'Leadership Change', etc.) make it easy for users to scan, prioritize, and eventually filter based on their interests.
+
+This prototype is just a starting point, but it aims to show how intelligence-driven personalization could be layered into the user experience in a meaningful and actionable way.
+
+## Engineering Notes
+
+The mockup illustrates a feature powered by AccessPoint Intelligence, designed to enrich the newsfeed with meaningful context. I’ve used “AccessPoint Intelligence” as a placeholder name to demonstrate how this capability could be positioned within a broader product ecosystem.
+
+### Example capabilities include:
+
+- **Highlighting Participant Histories**
+  When a news story mentions entities involved in previous deals, AccessPoint Intelligence can surface relevant historical data about those participants directly in the feed.
+- **Identifying Emerging Opportunities**
+  By analyzing new deals and comparing them to past transactions, AccessPoint Intelligence can detect similarities and provide insights into related deals and their key participants. This enables users to proactively engage with potential opportunities early.
+
+By integrating these capabilities, AccessPoint Intelligence transforms the newsfeed into a strategic tool for recognizing patterns, understanding market activity, and surfacing high-quality opportunities.
+
+> Note: For illustrative purposes, the same AccessPoint Intelligence component is shown for each newsfeed item in the mockup. In a real implementation, this content would be dynamically generated based on the actual entities and deals referenced in each article.
+
+While AccessPoint Intelligence represents a key part of the long-term vision, I don’t view this as something that should (or could) be implemented all at once. Building a robust contextual intelligence layer will require thoughtful iteration, cross-functional collaboration, and time to mature. This prototype is intended to show how the feature might eventually deliver significant value — starting small, learning from user feedback, and evolving as the product grows.
+
+Finally, different types of newsfeed events are surfaced using simple, recognizable tags (e.g., `Deal Update`, `Leadership Change`, `Network Activity`). This approach keeps the interface clean and intuitive while supporting future filtering and categorization as the system evolves.
+
+## Looking Ahead
+
+Potential future extensions include:
+- Embedding-based similarity matching for deals, firms, and news
+- User profiles that explicitly influence personalization (e.g., sectors, roles, preferred deal stages)
+- Ability to save or "track" deals and generate alerts
+- Integration with internal CRM activity (e.g., introductions, meetings)
+- Visualization tools to map deal relationships and paths to introductions
