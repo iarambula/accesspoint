@@ -1,95 +1,78 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import {
+  Container,
+  Card,
+  Text,
+  Code,
+  Pill,
+  Group,
+  Title,
+  Anchor,
+} from "@mantine/core";
+import { formatDistanceToNow, parseISO } from "date-fns";
+import Parser from "rss-parser";
 
-export default function Home() {
+export default async function Home() {
+  const parser = new Parser();
+
+  const feeds = await Promise.all([
+    // parser.parseURL("https://peprofessional.com/feed/"),
+    parser.parseURL("https://www.privateequitywire.co.uk/feed/"),
+  ]);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <Container>
+      <Title order={1} mb="md">
+        Your feed
+      </Title>
+      {feeds[0].items.map((item) => (
+        <Card key={item.guid} shadow="sm" padding="lg" mb="md" withBorder>
+          <Anchor href={item.link} size="lg" fw="bold" mb="xs" target="_blank">
+            {item.title}
+          </Anchor>
+          <Group mb="xs">
+            {item.isoDate && (
+              <Text size="sm" c="dimmed">
+                {formatDistanceToNow(parseISO(item.isoDate))}
+              </Text>
+            )}
+            {item.categories && (
+              <Text size="sm">
+                {item.categories.map((category) => (
+                  <Pill key={category} mr="xs">
+                    {category}
+                  </Pill>
+                ))}
+              </Text>
+            )}
+          </Group>
+          {item.contentSnippet && (
+            <Text size="xs" mb="xs">
+              {item.contentSnippet}
+            </Text>
+          )}
+          <Card withBorder>
+            <Text>
+              <Text
+                variant="gradient"
+                fw="bold"
+                gradient={{ from: "blue", to: "green" }}
+              >
+                AccessPoint Intelligence
+              </Text>
+              <Text size="xs" c="dimmed">
+                Related to your preferences
+              </Text>
+              <Anchor>Leveraged Buyout of ABC Corp</Anchor>
+              <Group>
+                <Anchor>XYZ Capital</Anchor>
+                <Anchor>ABC Corp</Anchor>
+                <Anchor>Goldman Sachs</Anchor>
+                <Anchor>Blackstone</Anchor>
+              </Group>
+            </Text>
+          </Card>
+        </Card>
+      ))}
+    </Container>
   );
 }
