@@ -256,7 +256,7 @@ Returns full details of a deal including participants, roles, and people.
         "name": "ABC Corp",
         "profile": {
           "industry": "Healthcare Services",
-          "type": "North America",
+          "region": "North America",
           "employeeCount": 1200,
           "foundedYear": 2004,
           "ownership": "Private",
