@@ -10,9 +10,17 @@ import {
 import { formatDistanceToNow, parseISO } from "date-fns";
 import Parser from "rss-parser";
 
-interface FeedItem extends Parser.Item {
+export interface FeedItem extends Parser.Item {
   feedTitle?: string;
   feedLink?: string;
+}
+
+export function sortFeedItems(items: FeedItem[]): FeedItem[] {
+  return [...items].sort((a, b) => {
+    const dateA = a.isoDate ? parseISO(a.isoDate).getTime() : 0;
+    const dateB = b.isoDate ? parseISO(b.isoDate).getTime() : 0;
+    return dateB - dateA;
+  });
 }
 
 export default async function Home() {
@@ -36,11 +44,7 @@ export default async function Home() {
     return acc;
   }, []);
 
-  feedItems = feedItems.sort((a, b) => {
-    const dateA = a.isoDate ? parseISO(a.isoDate).getTime() : 0;
-    const dateB = b.isoDate ? parseISO(b.isoDate).getTime() : 0;
-    return dateB - dateA;
-  });
+  feedItems = sortFeedItems(feedItems);
 
   return (
     <Container>
